@@ -29,7 +29,7 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
     - [__Mutability__](#mutability)
     - [__Choosing A Code Paradigm__](#choosing-a-code-paradigm)
     - [__Thought Experiment: Unpredictable Users__](#thought-experiment-unpredictable-users)
-  - [Functional OO JavaScript](#functional-oo-javascript)
+  - [__Functional OO JavaScript__](#functional-oo-javascript)
     - [__Module Pattern__](#module-pattern)
     - [__Factory Pattern__](#factory-pattern)
 
@@ -261,7 +261,7 @@ Consider how you might *strictly define user actions* (hint hint) as to prevent 
 Want a more thorough hint? Take a look at how the Redux library works. Consider how strictly-defined user actions allow programmers to write testable code... *and secure, maintainable code*.
 
 
-## Functional OO JavaScript
+## __Functional OO JavaScript__
 ### __Module Pattern__
 [<sup>^ to top</sup>](#table-of-contents)
 
