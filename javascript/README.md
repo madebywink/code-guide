@@ -6,7 +6,7 @@ This guide briefly covers important concepts and patterns in JavaScript (and com
 
 These concepts can be treated like axioms that inform the way we write code.
 
-Individually they are useful, but together they are powerful. They allow code to be reasoned about in a logically and mathematically - and therefore they are one way to make code reliable and testable.
+Individually they are useful, but together they are powerful. They allow code to be reasoned about logically and mathematically - and therefore testable.
 
 Neglecting these principles (without a set of equivalent paradigmatic principles) inevitably leads to code that is any combination of messy, unpredictable, untestable, insecure, unreliable, or vulnerable.
 
@@ -92,7 +92,7 @@ Continuous User Acceptance testing crowd sources improvements via user experienc
  - Use Closures
  - Treat variables as immutable except where it is extremely impractical to do so, do not rely on the convenience of mutability
  - Use a toolkit of fundamental programming patterns that help enforce data safety, maintainability, and testability
- - Do not use classes (unless you must)
+ - Do not use classes (unless you must), and if you do, hide them in factory functions
 
 ### __Scoping__
 [<sup>^ to top</sup>](#table-of-contents)
