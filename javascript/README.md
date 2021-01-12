@@ -21,9 +21,8 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
     - [__Purity__](#purity)
     - [__Closures__](#closures)
     - [__Mutability__](#mutability)
-    - [__Choosing A Code Paradigm__](#choosing-a-code-paradigm)
+  - [__Choosing A Code Paradigm__](#choosing-a-code-paradigm)
     - [__Thought Experiment: Unpredictable Users__](#thought-experiment-unpredictable-users)
-  - [__Functional OO JavaScript__](#functional-oo-javascript)
     - [__Module Pattern__](#module-pattern)
     - [__Factory Pattern__](#factory-pattern)
 
@@ -80,7 +79,6 @@ Continuous User Acceptance testing crowd sources improvements via user experienc
 [<sup>^ to top</sup>](#table-of-contents)
 
 ### __The Basics__
-[<sup>^ to top</sup>](#table-of-contents)
 
 Always use:
  - [scoping](#scoping)
@@ -90,12 +88,10 @@ Always use:
 And be sure to decouple data from behavior whenever and wherever possible.
 
 ### __Scoping__
-[<sup>^ to top</sup>](#table-of-contents)
 
 Every function should have a single concise purpose. No more, no less.
 
 ### __Purity__
-[<sup>^ to top</sup>](#table-of-contents)
 
 Functions should either have no side effects, or a single well-defined side-effect.
 
@@ -162,7 +158,6 @@ function transformData (dataJson) { ... }
 ```
 
 ### __Closures__
-[<sup>^ to top</sup>](#table-of-contents)
 
 JavaScript closures are extremely powerful.
 
@@ -216,7 +211,7 @@ Immutability helps to create code that evaluates/executes in a predictable way.
 Nothing in JavaScript is actually immutable, but we can pretend it is.
 
 
-### __Choosing A Code Paradigm__
+## __Choosing A Code Paradigm__
 [<sup>^ to top</sup>](#table-of-contents)
 
  - Use a toolkit of fundamental programming paradigms and patterns that help enforce efficiency, data safety, maintainability, and testability
@@ -254,8 +249,6 @@ Consider how you might *strictly define user actions* (hint hint) as to prevent 
 
 Want a more thorough hint? Take a look at how the Redux library works. Consider how strictly-defined user actions allow programmers to write testable code... *and secure, maintainable code*.
 
-
-## __Functional OO JavaScript__
 ### __Module Pattern__
 [<sup>^ to top</sup>](#table-of-contents)
 
