@@ -27,8 +27,9 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
     - [__Purity__](#purity)
     - [__Closures__](#closures)
     - [__Mutability__](#mutability)
+    - [__Choosing A Code Paradigm__](#choosing-a-code-paradigm)
     - [__Thought Experiment: Unpredictable Users__](#thought-experiment-unpredictable-users)
-    - [__Namespacing__](#namespacing)
+  - [Functional OO JavaScript](#functional-oo-javascript)
     - [__Module Pattern__](#module-pattern)
     - [__Factory Pattern__](#factory-pattern)
 
@@ -87,12 +88,12 @@ Continuous User Acceptance testing crowd sources improvements via user experienc
 ### __The Basics__
 [<sup>^ to top</sup>](#table-of-contents)
 
- - Enforce functional purity
- - Scope functions and objects correctly
- - Use Closures
- - Treat variables as immutable except where it is extremely impractical to do so, do not rely on the convenience of mutability
- - Use a toolkit of fundamental programming patterns that help enforce data safety, maintainability, and testability
- - Do not use classes (unless you must), and if you do, hide them in factory functions
+Always use:
+ - [scoping](#scoping)
+ - [functional purity](#purity)
+ - [closures](#closures)
+
+And be sure to decouple data from behavior whenever and wherever possible.
 
 ### __Scoping__
 [<sup>^ to top</sup>](#table-of-contents)
@@ -163,7 +164,7 @@ async function fetchData(apiUrl) {
     const res = await fetch(apiUrl);
     return transformData(await res.json());
 }
-function transformData () { ... }
+function transformData (dataJson) { ... }
 ```
 
 ### __Closures__
@@ -220,6 +221,32 @@ Immutability helps to create code that evaluates/executes in a predictable way.
 
 Nothing in JavaScript is actually immutable, but we can pretend it is.
 
+
+### __Choosing A Code Paradigm__
+[<sup>^ to top</sup>](#table-of-contents)
+
+ - Use a toolkit of fundamental programming paradigms and patterns that help enforce efficiency, data safety, maintainability, and testability
+   - Where **data** is the primary concern, use functional programming techniques:
+     - enforce functional purity and function/object scopes
+     - use closures
+     - treat variables and objects as immutable
+     - *do not use classes*
+     - *do not write procedural code*
+   - Where **performance or behavior-driven logic** are the primary concern (realtime animation, game design, etc.)
+     - use classes and class-based scoping
+     - use mutable objects/variables to improve performance
+     - perform procedural computations (optimized for-loops, etc.)
+     - *eliminate all unnecessary object copying / construction*
+   - Where **user behavior and data** are equally important, use functional-reactive techniques
+     - use all functional programming virtues above
+     - use a functional state reducer to simulate state
+     - use classes to represent users or sessions
+     - use strictly defined reducer actions for user interactions/intents
+     - decouple side-effects from state mutations
+     - strictly defined reducer actions allow features (including user interactions, asynchronous data, webhooks, middleware, etc.) to be proven and to be reasoned about in testing stages
+     - *a state reducer + strict actions also allows user sessions to be recorded and replayed*
+
+
 ### __Thought Experiment: Unpredictable Users__
 [<sup>^ to top</sup>](#table-of-contents)
 
@@ -227,21 +254,18 @@ Here's something to think about:
 
 Suppose we want to create a predictable code environment that takes user input. Maybe this environment runs on a website, an app, or an API.
 
-How can we ensure that the code will behave in a predictable while still allowing user actions to mutate an app's internal state?
+How can we ensure that the code will behave predictably while still allowing user actions to mutate an app's internal state?
 
-Consider how you might strictly define user actions as to prevent unwanted mutations.
+Consider how you might *strictly define user actions* (hint hint) as to prevent unwanted mutations.
 
-Want a hint? Take a look at how the Redux library works. Consider how strictly-defined user actions allow programmers to write testable code... *and secure, maintainable code as well*.
+Want a more thorough hint? Take a look at how the Redux library works. Consider how strictly-defined user actions allow programmers to write testable code... *and secure, maintainable code*.
 
-### __Namespacing__
-[<sup>^ to top</sup>](#table-of-contents)
 
-Namespacing is made possible through the combined use of scopes and closures. It's a fundamental way to keep data safe and to write clean, maintainable, testable code.
-
+## Functional OO JavaScript
 ### __Module Pattern__
 [<sup>^ to top</sup>](#table-of-contents)
 
-The module pattern in JavaScript is very power, very important, and very natural to use.
+The module pattern in JavaScript is very powerful, very important, and very natural to use.
 
 ```js
 export default (function myModule() {
