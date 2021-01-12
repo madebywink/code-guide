@@ -15,18 +15,78 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
 ## Table of Contents
 - [Wink's Very Basic JavaScript Paradigm Guide](#winks-very-basic-javascript-paradigm-guide)
   - [Table of Contents](#table-of-contents)
-  - [The Basics](#the-basics)
-  - [Scoping](#scoping)
-  - [Purity](#purity)
-  - [Closures](#closures)
-  - [Mutability](#mutability)
-  - [Thought Experiment: Unpredictable Users](#thought-experiment-unpredictable-users)
-  - [Namespacing](#namespacing)
-  - [Module Pattern](#module-pattern)
-  - [Factory Pattern](#factory-pattern)
-  - [Testing](#testing)
+  - [__E2E Testing__](#e2e-testing)
+    - [__Smoke tests__](#smoke-tests)
+    - [__Component / Module__](#component--module)
+    - [__Unit (function / object)__](#unit-function--object)
+    - [__Exploratory UX / End-user__](#exploratory-ux--end-user)
+    - [__Continuous User Acceptance__](#continuous-user-acceptance)
+  - [__How To Write Basically Testable Code__](#how-to-write-basically-testable-code)
+    - [__The Basics__](#the-basics)
+    - [__Scoping__](#scoping)
+    - [__Purity__](#purity)
+    - [__Closures__](#closures)
+    - [__Mutability__](#mutability)
+    - [__Thought Experiment: Unpredictable Users__](#thought-experiment-unpredictable-users)
+    - [__Namespacing__](#namespacing)
+    - [__Module Pattern__](#module-pattern)
+    - [__Factory Pattern__](#factory-pattern)
 
-## The Basics
+
+## __E2E Testing__
+[<sup>^ to top</sup>](#table-of-contents)
+
+![Basic scopes and hierarchy in testing](/javascript/testinghierarchies.png) *E2E testing, as simple as possible.*
+
+### __Smoke tests__
+[<sup>^ to top</sup>](#table-of-contents)
+
+[Smoke tests](https://en.wikipedia.org/wiki/Smoke_testing_(software)) verify the core functionality of a website, app, or product. 
+
+Smoke tests are considered ["the most cost-effective method for identifying and fixing defects in software"](https://docs.microsoft.com/en-us/previous-versions/ms182613(v=vs.80)). 
+
+*Smoke testing answers the question "What things do users do most often? Do those features all work?"*
+
+These tests cover the front-end and the back-end.
+
+### __Component / Module__
+[<sup>^ to top</sup>](#table-of-contents)
+
+[Component tests](https://sqa.stackexchange.com/questions/12630/what-is-component-testing-and-how-to-write-component-test-cases) have the power to perform deep inspection of the app's behavior.
+
+They test the usability of each individual component or module in an app.
+
+They are situated in the space between Smoke Tests and Unit Tests.
+
+They can isolate Components (front end), Modules (full stack), and API's (back-end) and verify how they behave in repeatable simulated environments.
+
+### __Unit (function / object)__
+[<sup>^ to top</sup>](#table-of-contents)
+
+The basic *unit* of behavior in terms of testing is the *function* (or the *object*, in scripting languages like JavaScript that support mutable objects).
+
+Unit tests verify software behavior at the most atomic level: the behavior of functions and objects.
+
+Unit tests verify things like methods, utility functions, and state stores.
+
+### __Exploratory UX / End-user__
+[<sup>^ to top</sup>](#table-of-contents)
+
+Exploratory UX testing seeks to find bugs that are difficult to test for and to give User Acceptance insight prior to product launch.
+
+Exploratory UX and End User testing reveals a product to a manual testing team or test population who use the product as real world users would. They provide UX and functionality feedback prior to launch, and can be charged with the task of attempting to break the app through normal use.
+
+### __Continuous User Acceptance__
+[<sup>^ to top</sup>](#table-of-contents)
+
+Continuous User Acceptance testing crowd sources improvements via user experience feedback.
+
+## __How To Write Basically Testable Code__
+[<sup>^ to top</sup>](#table-of-contents)
+
+### __The Basics__
+[<sup>^ to top</sup>](#table-of-contents)
+
  - Enforce functional purity
  - Scope functions and objects correctly
  - Use Closures
@@ -34,10 +94,14 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
  - Use a toolkit of fundamental programming patterns that help enforce data safety, maintainability, and testability
  - Do not use classes (unless you must)
 
-## Scoping
+### __Scoping__
+[<sup>^ to top</sup>](#table-of-contents)
+
 Every function should have a single concise purpose. No more, no less.
 
-## Purity
+### __Purity__
+[<sup>^ to top</sup>](#table-of-contents)
+
 Functions should either have no side effects, or a single well-defined side-effect.
 
 In short: Every function should have a single concise purpose. No more, no less.
@@ -102,7 +166,9 @@ async function fetchData(apiUrl) {
 function transformData () { ... }
 ```
 
-## Closures
+### __Closures__
+[<sup>^ to top</sup>](#table-of-contents)
+
 JavaScript closures are extremely powerful.
 
 ```js
@@ -135,7 +201,8 @@ function MyReactComponent() {
 function someFunction() { ... }
 ```
 
-## Mutability
+### __Mutability__
+[<sup>^ to top</sup>](#table-of-contents)
 
 TL;DR: Use mutability as little as possible, try to never use it unless it is simply impractical not to.
 
@@ -153,7 +220,9 @@ Immutability helps to create code that evaluates/executes in a predictable way.
 
 Nothing in JavaScript is actually immutable, but we can pretend it is.
 
-## Thought Experiment: Unpredictable Users
+### __Thought Experiment: Unpredictable Users__
+[<sup>^ to top</sup>](#table-of-contents)
+
 Here's something to think about:
 
 Suppose we want to create a predictable code environment that takes user input. Maybe this environment runs on a website, an app, or an API.
@@ -164,10 +233,13 @@ Consider how you might strictly define user actions as to prevent unwanted mutat
 
 Want a hint? Take a look at how the Redux library works. Consider how strictly-defined user actions allow programmers to write testable code... *and secure, maintainable code as well*.
 
-## Namespacing
+### __Namespacing__
+[<sup>^ to top</sup>](#table-of-contents)
+
 Namespacing is made possible through the combined use of scopes and closures. It's a fundamental way to keep data safe and to write clean, maintainable, testable code.
 
-## Module Pattern
+### __Module Pattern__
+[<sup>^ to top</sup>](#table-of-contents)
 
 The module pattern in JavaScript is very power, very important, and very natural to use.
 
@@ -198,7 +270,8 @@ export default (function myModule() {
 
 ```
 
-## Factory Pattern
+### __Factory Pattern__
+[<sup>^ to top</sup>](#table-of-contents)
 
 The factory pattern in JavaScript is also very powerful, very important, and relatively straight-forward to use.
 
@@ -235,10 +308,3 @@ const statefulObject = configuredFactory();
 ```
 
 \* *The combined use of the module pattern and prototypes allows us all of the potential benefits of `class`-based objects, including inheritance.*
-
-
-## Testing
-
-![Basic scopes and hierarchy in testing](/javascript/testinghierarchies.png)
-
-*to be continued...*
