@@ -4,12 +4,6 @@ Code which can be reasoned about can be tested. Its behavior can be well-underst
 
 This guide briefly covers important concepts and patterns in JavaScript (and computer programming in general).
 
-These concepts can be treated like axioms that inform the way we write code.
-
-Individually they are useful, but together they are powerful. They allow code to be reasoned about logically and mathematically - and therefore testable.
-
-Neglecting these principles (without a set of equivalent paradigmatic principles) inevitably leads to code that is any combination of messy, unpredictable, untestable, insecure, unreliable, or vulnerable.
-
 For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https://github.com/airbnb/javascript).
 
 ## Table of Contents
