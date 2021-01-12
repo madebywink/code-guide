@@ -85,7 +85,9 @@ Always use:
  - [functional purity](#purity)
  - [closures](#closures)
 
-And be sure to decouple data from behavior whenever and wherever possible.
+And be sure to decouple data from logic and behavior whenever and wherever possible. 
+
+*Decoupling data from logic allows many advanced techniques and opertions, for instance: running game and animation calculations in a worker thread (or on the GPU) while updating the UI on the main thread. It also helps to support referential transparency and testability throughout your code.*
 
 ### __Scoping__
 
