@@ -87,7 +87,7 @@ Always use:
 
 And be sure to decouple data from logic and behavior whenever and wherever possible. 
 
-*Decoupling data from logic allows many advanced techniques and opertions, for instance: running game and animation calculations in a worker thread (or on the GPU) while updating the UI on the main thread. It also helps to support referential transparency and testability throughout your code.*
+*Decoupling data from logic allows many advanced techniques and opertions, for instance: running game and animation calculations in a worker thread (or on the GPU) while updating the UI on the main thread. It also helps to support referential transparency and testability throughout your code. It also makes programming patterns like state reducers possible, which enables recordable/replayable state.*
 
 ### __Scoping__
 
