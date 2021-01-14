@@ -320,4 +320,4 @@ const statefulObject = configuredFactory();
 // now let's run some tests...
 ```
 
-\* *The combined use of the module pattern and prototypes allows us all of the potential benefits of `class`-based objects, including inheritance.*
+\* *The combined use of the module pattern and prototypes (`object.create()`) allows us all of the potential benefits of `class`-based objects, including inheritance.*
