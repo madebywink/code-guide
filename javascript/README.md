@@ -1,4 +1,4 @@
-# Wink's Very Basic JavaScript Paradigm Guide
+# Wink Digital Guide to Writing Testable JavaScript
 
 Code which can be reasoned about can be tested. Its behavior can be well-understood and accurately predicted by those who develop, maintain, and use it.
 
@@ -6,16 +6,26 @@ This guide briefly covers important concepts and patterns in JavaScript (and com
 
 For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https://github.com/airbnb/javascript).
 
+For another opinion on how to write testable code, see what Toptal has to say about [Writing Testable Code In JavaScript](https://www.toptal.com/javascript/writing-testable-code-in-javascript)
+
 ## Table of Contents
-- [Wink's Very Basic JavaScript Paradigm Guide](#winks-very-basic-javascript-paradigm-guide)
+- [Wink Digital Guide to Writing Testable JavaScript](#wink-digital-guide-to-writing-testable-javascript)
   - [Table of Contents](#table-of-contents)
-  - [__E2E Testing__](#e2e-testing)
+  - [__Types of Test__](#types-of-test)
     - [__Smoke tests__](#smoke-tests)
     - [__Component / Module__](#component--module)
     - [__Unit (function / object)__](#unit-function--object)
     - [__Exploratory UX / End-user__](#exploratory-ux--end-user)
     - [__Continuous User Acceptance__](#continuous-user-acceptance)
-  - [__How To Write Basically Testable Code__](#how-to-write-basically-testable-code)
+  - [__Principles__](#principles)
+    - [__Use Named Functions To Scope Important Logic In A Testable Way__](#use-named-functions-to-scope-important-logic-in-a-testable-way)
+    - [__Use Dependency Injections To Write Testable Helper Functions__](#use-dependency-injections-to-write-testable-helper-functions)
+    - [__Separate Business Logic from UI Logic__](#separate-business-logic-from-ui-logic)
+    - [__Avoid Side Effects, Or At Least Decouple Them From State Logic__](#avoid-side-effects-or-at-least-decouple-them-from-state-logic)
+    - [__Functions Should Only Have A Single Purpose__](#functions-should-only-have-a-single-purpose)
+    - [__Do Not Mutate Parameters__](#do-not-mutate-parameters)
+    - [__Write Tests Before You Code__](#write-tests-before-you-code)
+  - [__Formal Concepts, Briefly__](#formal-concepts-briefly)
     - [__The Basics__](#the-basics)
     - [__Scoping__](#scoping)
     - [__Purity__](#purity)
@@ -26,11 +36,13 @@ For a complete syntactic *style* guide, see the [AirBnB JavaScript Guide](https:
     - [__Module Pattern__](#module-pattern)
     - [__Factory Pattern__](#factory-pattern)
 
+<br /><hr /><br />
 
-## __E2E Testing__
-[<sup>^ to top</sup>](#table-of-contents)
+![Basic scopes and hierarchy in testing](/javascript/testinghierarchies.png) *E2E testing, as simple as possible. By writing top-down tests from the start, we get regression testing for free. Nice!*
 
-![Basic scopes and hierarchy in testing](/javascript/testinghierarchies.png) *E2E testing, as simple as possible.*
+<br />
+
+## __Types of Test__
 
 ### __Smoke tests__
 [<sup>^ to top</sup>](#table-of-contents)
@@ -75,7 +87,227 @@ Exploratory UX and End User testing reveals a product to a manual testing team o
 
 Continuous User Acceptance testing crowd sources improvements via user experience feedback.
 
-## __How To Write Basically Testable Code__
+<br />
+
+## __Principles__
+
+*NOTE: Every single principle listed here comes down to one single formal concept: [functional scoping](#scoping).*
+
+### __Use Named Functions To Scope Important Logic In A Testable Way__
+
+Anonymous functions = generally good and highly convenient.
+
+Anonymous functions that make testing difficult = generally unpleasant and inconvenient.
+
+```js
+// bad (hard to test)
+$('button').on('click', () => {
+    $.getJSON('/path/to/data')
+        .then(data => {
+            $('#my-list').html('results: ' + data.join(', '));
+        });
+});
+
+// good (easy to test)
+$('button').on('click', () => fetchThings(showThings));
+
+function fetchThings(callback) {
+    $.getJSON('/path/to/data').then(callback);
+}
+
+function showThings(data) {
+    $('#my-list').html('results: ' + data.join(', '));
+}
+```
+
+### __Use Dependency Injections To Write Testable Helper Functions__
+
+This is particularly important for helper functions that perform important or complex logic. The example has been simplified for this purpose of readability.
+
+Note that dependency injections have a an important relationship with the concept of [*functional scopes*](#scoping).
+
+```js
+// sometimes bad (difficult to test inner functions)
+function myModule(config) {
+    const state = {
+        value: config.initialValue;
+    };
+
+    function increment() {
+        return state.value + config.increment;
+    }
+
+    return {
+        nextValue: increment
+    }
+}
+
+// nearly always good (easy to test)
+function myModule(config) {
+    const state = {
+        value: config.initialValue;
+    };
+
+    return {
+        increment: () => myHelper(state, config.increment)
+    }
+}
+
+function myHelper(s, inc) {
+    return s.value + inc;
+}
+```
+
+### __Separate Business Logic from UI Logic__
+
+This is very similar to the principle of [using named functions to scope logic in a testable way](#use-named-functions-to-scope-important-logic-in-a-testable-way).
+
+*Note that ES6 Classes could be used here instead of factory functions.*
+
+```js
+// bad (hard to test, tightly coupled dependencies, logic, state, etc.)
+function BallFactory ({x: 0, y: 0, radius: 1}) {
+    const Ball = ($el) => {
+        const state = {
+            pos: {x, y},
+            radius
+        }
+        const move = (x, y) => {
+            state.pos = { x, y }
+            updateUI(state.pos)
+        }
+        const morph = (radius) => {
+            state.radius = radius
+        }
+        function updateUI() {
+            $el.css({
+                top: state.pos.top - radius, 
+                left: state.pos.left - radius
+            })
+        }
+        return { move, morph, pos: {...state.pos}, radius }
+    }
+    return Ball
+}
+const BallFactory = BallFactory();
+const Ball = BallFactory($('.my-element'));
+
+// good (easy to test)
+const defaultConfig = {x: 0, y: 0, radius: 1}
+function SmartBallFactory (customDefaults) {
+    const config = { ...defaultConfig, ...customDefaults }
+    function Ball (onMove, {...config}) {
+        const state = {
+            pos: {x, y},
+            radius
+        }
+        const move = (x, y) => {
+            state.pos = { x, y }
+            onMove()
+        }
+        const morph = (radius) => {
+            state.radius = radius
+        }
+        return { move, morph, pos: {...state.pos}, radius }
+    }
+    return Ball
+}
+const BallFactory = SmartBallFactory();
+const Ball = BallFactory(updateUI);
+function updateUI() {
+    $('.my-element').css({
+        top: state.pos.top - radius, 
+        left: state.pos.left - radius
+    })
+}
+```
+
+
+### __Avoid Side Effects, Or At Least Decouple Them From State Logic__
+
+In general side-effects can turn code into alpha-numeric spaghetti. In programming, spaghetti is bad. 
+
+Fortunately, there are ways to perform side-effects without coupling them tightly to state logic.
+
+Doing so can be simple and straight forward.
+
+Often it's best if we can treat state-change side-effects as if they were asynchronous (i.e. state updates to not depend on side-effects being successfully completed). This isn't strictly necessary, but usually improves reactivity and performance.
+
+One of the best and most reliable ways to handle state-change side-effects is to handle them with an [Observable Subject](https://rxjs-dev.firebaseapp.com/guide/subject). *Note that we aren't required to use Observables here, in fact, this decoupled pattern can use any decoupled side-effect handler.*
+
+This means we get both exception handling and side-effects without cluttering our state logic, which improves maintainability and guarantees that failed side-effects don't prevent successful state updates.
+
+**Finally, last but not least, this means that we can test our state and our side-effects separately, without depending on each other.**
+
+```js
+// bad
+function stateReducer(state, changes) {
+  switch (changes.type) {
+    case 'SOME_ACTION':
+      return {
+        ...state,
+        ...changes
+      }
+    case 'SOME_ACTION_WITH_SIDE_EFFECT':
+      document.getElementById('el').innerText = changes.value
+      return {
+        ...state,
+        ...changes
+      }
+    case 'SOME_ACTION_WITH_ASYNC_SIDE_EFFECT':
+      (async () => {
+          const r = await fetch('https://my-api'),
+                d = await r.json();
+          document.getElementById('el').innerText = d.foo  
+      })()
+      return {
+        ...state,
+        ...changes
+      }
+    default:
+      return state
+  }
+}
+
+// good! (note the optional use of dependency injection)
+const SomeEffectHandler = new rxjs.Subject()
+const SomeEffectHandler.subscribe({ 
+    next: (x) => doSomeEffect(x) 
+})
+const EFFECTS = { SomeEffectHandler, ... }
+
+function stateReducer(state, changes, EFFECTS) {
+  switch (changes.type) {
+    case 'SOME_ACTION':
+      EFFECTS.SomeEffectHandler.next(changes.value)
+      return {
+        ...state,
+        ...changes
+      }
+    default:
+      return state
+  }
+}
+
+async function doSomeEffect(x) {
+    try {
+        // ...
+    } catch (err) {
+        //...
+    }
+}
+
+```
+
+### __Functions Should Only Have A Single Purpose__
+
+### __Do Not Mutate Parameters__
+
+### __Write Tests Before You Code__
+
+<br />
+
+## __Formal Concepts, Briefly__
 [<sup>^ to top</sup>](#table-of-contents)
 
 ### __The Basics__
@@ -212,6 +444,7 @@ Immutability helps to create code that evaluates/executes in a predictable way.
 
 Nothing in JavaScript is actually immutable, but we can pretend it is.
 
+<br />
 
 ## __Choosing A Code Paradigm__
 [<sup>^ to top</sup>](#table-of-contents)
