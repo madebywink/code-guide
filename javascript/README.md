@@ -319,7 +319,7 @@ Always use:
 
 And be sure to decouple data from logic and behavior whenever and wherever possible. 
 
-*Decoupling data from logic allows many advanced techniques and opertions, for instance: running game and animation calculations in a worker thread (or on the GPU) while updating the UI on the main thread. It also helps to support referential transparency and testability throughout your code.*
+*Decoupling data from logic allows many advanced techniques and opertions, for instance: running game and animation calculations in a worker thread (or on the GPU) while updating the UI on the main thread. It also helps to support referential transparency and testability throughout your code. It also makes programming patterns like state reducers possible, which enables recordable/replayable state.*
 
 ### __Scoping__
 
@@ -553,4 +553,4 @@ const statefulObject = configuredFactory();
 // now let's run some tests...
 ```
 
-\* *The combined use of the module pattern and prototypes allows us all of the potential benefits of `class`-based objects, including inheritance.*
+\* *The combined use of the module pattern and prototypes (`object.create()`) allows us all of the potential benefits of `class`-based objects, including inheritance.*
